@@ -1,8 +1,9 @@
 # coding: utf-8
 import argparse
-import os
 import random
 from collections import OrderedDict
+from pathlib import Path
+from typing import Union
 
 import numpy as np
 import torch
@@ -20,8 +21,8 @@ from ignite.handlers import ModelCheckpoint
 
 def check_paths(args):
     try:
-        if args.checkpoint_model_dir is not None and not (os.path.exists(args.checkpoint_model_dir)):
-            os.makedirs(args.checkpoint_model_dir)
+        if args.checkpoint_model_dir is not None and not (Path(args.checkpoint_model_dir).exists()):
+            Path.mkdir(args.checkpoint_model_dir, parents=True)
     except OSError as e:
         raise OSError(e)
 
@@ -160,7 +161,7 @@ def main():
     train_arg_parser.add_argument("--test_image", type=str, default="test", help="path to test-image")
     train_arg_parser.add_argument(
         "--checkpoint_model_dir",
-        type=str,
+        type=Union[str, Path],
         default="/tmp/checkpoints",
         help="path to folder where checkpoints of trained models will be saved",
     )
